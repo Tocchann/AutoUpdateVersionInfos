@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath);$(MSBuildThisFileDirectory)GenerateVersionDetail.ps1</MSBuildAllProjects>
+  </PropertyGroup>
+  <!-- FileVersion と、StartYear はあらかじめターゲットのプロジェクトで設定しておくこと -->
+  <Target Name="ValidateNeedGenerateVersionProperties">
+    <Error Condition="'$(StartYear)' == ''" Text="プロパティ 'StartYear' が定義されていません。" />
+    <Error Condition="'$(Version)' == '' and '$(FileVersion)' == ''" Text="プロパティ 'Version' か 'FileVersion' の定義が必要です。" />
+    <Message Text="StartYear: $(StartYear)" Importance="low" />
+    <Message Text="Version: $(Version)" Importance="low" />
+    <Message Text="FileVersion: $(FileVersion)" Importance="low" />
+  </Target>
+  <!--ビルド済みのバージョン情報を取得して、新しいバージョンを定義する PowerShell スクリプト。アウトプットを Item として取り込む-->
+  <Target Name="GenerateVersionDetail" DependsOnTargets="ValidateNeedGenerateVersionProperties">
+    <PropertyGroup>
+      <PreDefinedFileVersion>$(FileVersion)</PreDefinedFileVersion>
+      <PreDefinedFileVersion Condition="'$(PreDefinedFileVersion)' == ''">$(Version)</PreDefinedFileVersion>
+    </PropertyGroup>
+
+    <Exec Command="PowerShell –NonInteractive -ExecutionPolicy Unrestricted -Command $(MSBuildThisFileDirectory)GenerateVersionDetail.ps1 $(TargetPath) $(PreDefinedFileVersion) $(StartYear)" IgnoreExitCode="true" ConsoleToMsBuild="true">
+      <Output ItemName="_FileVersions" TaskParameter="ConsoleOutput" />
+    </Exec>
+    <Message Text="PreDefinedFileVersion: $(PreDefinedFileVersion)" Importance="low" />
+    <Message Text="@(_FileVersions)" Importance="low" />
+  </Target>
+</Project>

@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+  </PropertyGroup>
+  <!--ビルド日時をそのままセットするターゲットを取り込む-->
+  <Import Condition="'$(AutoUpdateVersionInfo)' == 'BuildDate'" Project="$(MSBuildThisFileDirectory)SetBuildDate\GenerateVersionDetail.targets" />
+  <!--バージョン定義をスタート年１月を基準としたオフセット日付で設定するターゲットを取り込む-->
+  <Import Condition="'$(AutoUpdateVersionInfo)' == 'OffsetDate'" Project="$(MSBuildThisFileDirectory)SetOffsetDate\GenerateVersionDetail.targets" />
+  <!--単純なインクリメント-->
+  <Import Condition="'$(AutoUpdateVersionInfo)' == 'SimpleIncrement'" Project="$(MSBuildThisFileDirectory)SetSimpleIncrement\GenerateVersionDetail.targets" />
+  <PropertyGroup>
+    <GenerateVersionDetailDependsOn>
+      GenerateVersionDetail
+    </GenerateVersionDetailDependsOn>
+  </PropertyGroup>
+  <!--SDK形式でのファイルバージョン定義を用意する-->
+  <Target Name="GenerateSdkReferFileVersion" BeforeTargets="PreBuildEvent" DependsOnTargets="$(GenerateVersionDetailDependsOn)" Condition="'$(NeedSdkFileVersion)' =='true'">
+    <PropertyGroup>
+      <Version Condition="'$(Version)' == ''">$(PreDefinedFileVersion)</Version>
+      <FileVersion>@(_FileVersions, '.')</FileVersion>
+    </PropertyGroup>
+    <Message Text="FileVersion: $(FileVersion)" Importance="low" />
+  </Target>
+  <!--VC++プロジェクト用のファイルバージョン定義を用意する。-->
+  <Target Name="GenerateCppReferFileVersion" BeforeTargets="PreBuildEvent" DependsOnTargets="$(GenerateVersionDetailDependsOn)" Condition="'$(NeedCppFileVersion)' =='true'">
+    <PropertyGroup>
+      <CppFileVersionStr>@(_FileVersions, '.')</CppFileVersionStr>
+      <CppFileVersion>@(_FileVersions, ',')</CppFileVersion>
+    </PropertyGroup>
+    <Message Text="CppFileVersionStr: $(CppFileVersionStr)" Importance="low" />
+    <Message Text="CppFileVersion: $(CppFileVersion)" Importance="low" />
+    <CreateItem Include="#define VER_FILEVERSION $(CppFileVersion)">
+      <Output ItemName="CppVersionInfoLines" TaskParameter="Include" />
+    </CreateItem>
+    <CreateItem Include="#define VER_FILEVERSION_STR %22$(CppFileVersionStr)%22">
+      <Output ItemName="CppVersionInfoLines" TaskParameter="Include" />
+    </CreateItem>
+    <CombinePath BasePath="$(IntermediateOutputPath)" Paths="$(MSBuildProjectName).VersionInfo.h">
+      <Output TaskParameter="CombinedPaths" PropertyName="CppVersionInfoFilePath" />
+    </CombinePath>
+    <ReadLinesFromFile File="$(CppVersionInfoFilePath)" Condition="Exists('$(CppVersionInfoFilePath)')">
+      <Output ItemName="Prior_CppVersionInfoLines" TaskParameter="Lines" />
+    </ReadLinesFromFile>
+    <!--そのままルートに吐き出す-->
+    <WriteLinesToFile File="$(CppVersionInfoFilePath)" Lines="@(CppVersionInfoLines)" Overwrite="true" Condition="'@(CppVersionInfoLines)' != '@(Prior_CppVersionInfoLines)'" />
+  </Target>
+  <!--AssemblyInfo.csのバージョン定義だけを自動生成する-->
+  <Target Name="GenerateVersionInfoCS" BeforeTargets="PreBuildEvent" DependsOnTargets="$(GenerateVersionDetailDependsOn)" Condition="'$(NeedNetfxFileVersion)' == 'true'">
+    <PropertyGroup>
+      <FileVersion>@(_FileVersions, '.')</FileVersion>
+    </PropertyGroup>
+    <CreateItem Include='[assembly: System.Reflection.AssemblyVersion( "$(PreDefinedFileVersion)" )]'>
+      <Output ItemName="CsVersionInfoLines" TaskParameter="Include" />
+    </CreateItem>
+    <CreateItem Include='[assembly: System.Reflection.AssemblyFileVersion( "$(FileVersion)" )]'>
+      <Output ItemName="CsVersionInfoLines" TaskParameter="Include" />
+    </CreateItem>
+    <Message Text="CsVersionInfoLines: @(CsVersionInfoLines)" Importance="low" />
+    <CombinePath BasePath="$(IntermediateOutputPath)" Paths="$(MSBuildProjectName).VersionInfo.cs">
+      <Output TaskParameter="CombinedPaths" PropertyName="CsVersionInfoFilePath" />
+    </CombinePath>
+    <ReadLinesFromFile File="$(CsVersionInfoFilePath)" Condition="Exists('$(CsVersionInfoFilePath)')">
+      <Output ItemName="Prior_CsVersionInfoLines" TaskParameter="Lines" />
+    </ReadLinesFromFile>
+    <!--変更が出る場合のみ更新する(呼ばれたらつくっちゃうけどね…)-->
+    <WriteLinesToFile File="$(CsVersionInfoFilePath)" Lines="@(CsVersionInfoLines)" Overwrite="true" Condition="'@(CsVersionInfoLines)' != '@(Prior_CsVersionInfoLines)'"/>
+    <ItemGroup>
+      <Compile Condition="Exists('$(CsVersionInfoFilePath)')" Include="$(CsVersionInfoFilePath)" />
+    </ItemGroup>
+  </Target>
+</Project>
