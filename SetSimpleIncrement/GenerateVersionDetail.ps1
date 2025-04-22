@@ -15,13 +15,14 @@ begin {
     else{
         $currVer = [System.Version]::new(0,0,0,0)
     }
+    $baseVer = [System.Version]::new($baseVer.Major, $baseVer.Minor, $baseVer.Build, $currVer.Revision)
 }
 
 process {
     # 基準は渡されたバージョンに合わせる
     $returnVer = $baseVer
     # バージョンが同じならリビジョンをカウントアップ
-    if( $currVer -eq $returnVer )
+    if( $currVer -eq $baseVer )
     {
         $returnVer = [System.Version]::new($currVer.Major, $currVer.Minor, $currVer.Build, $currVer.Revision + 1)
     }
