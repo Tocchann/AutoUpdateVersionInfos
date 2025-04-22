@@ -12,10 +12,11 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <Version>1.0.0.0</Version>
-    <StartYear>2025</StartYear>
+    <!--自動バージョン更新用プロパティ定義-->
     <AutoUpdateVersionInfo>BuildDate</AutoUpdateVersionInfo>
     <NeedNetfxFileVersion>true</NeedNetfxFileVersion>
+    <StartYear>2025</StartYear>
+    <Version>1.0.0.0</Version>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>

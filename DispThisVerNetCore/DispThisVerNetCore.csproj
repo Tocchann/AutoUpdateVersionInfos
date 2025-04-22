@@ -5,6 +5,7 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <!--自動バージョン更新用プロパティ定義-->
     <AutoUpdateVersionInfo>OffsetDate</AutoUpdateVersionInfo>
     <NeedSdkFileVersion>true</NeedSdkFileVersion>
     <StartYear>2025</StartYear>
