@@ -9,9 +9,32 @@
   <Import Condition="'$(AutoUpdateVersionInfo)' == 'OffsetDate'" Project="$(MSBuildThisFileDirectory)SetOffsetDate\GenerateVersionDetail.targets" />
   <!--単純なインクリメント-->
   <Import Condition="'$(AutoUpdateVersionInfo)' == 'SimpleIncrement'" Project="$(MSBuildThisFileDirectory)SetSimpleIncrement\GenerateVersionDetail.targets" />
+  <!--リビルドなどで前回ビルドバージョンを把握できないときのために別途保存しているビルド条件を読み取る-->
+  <Target Name="MakePriorIntermediateVersionInfoFilePath" Condition="'$(IntermediateVersionInfoFile)' == ''">
+    <CombinePath BasePath="$(IntermediateOutputPath)" Paths="IntermediateVersionInfo.txt">
+      <Output TaskParameter="CombinedPaths" PropertyName="IntermediateVersionInfoFile" />
+    </CombinePath>
+  </Target>
+  <!--リビルドしたなどで、出力ファイルが無くなってしまった場合に前回ビルドバージョンを復元する-->
+  <Target Name="ReadPriorVersionFromFile" DependsOnTargets="MakePriorIntermediateVersionInfoFilePath">
+    <ReadLinesFromFile File="$(IntermediateVersionInfoFile)" Condition="Exists('$(IntermediateVersionInfoFile)')">
+      <Output PropertyName="Prior_FileVersion" TaskParameter="Lines"/>
+    </ReadLinesFromFile>
+    <PropertyGroup>
+      <Prior_FileVersion Condition="'$(Prior_FileVersion)' == ''">0.0.0.0</Prior_FileVersion>
+    </PropertyGroup>
+  </Target>
+  <Target Name="WriteCurrVersionToFile" DependsOnTargets="MakePriorIntermediateVersionInfoFilePath">
+    <PropertyGroup>
+      <Curr_FileVersion>@(_FileVersions, '.')</Curr_FileVersion>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(IntermediateVersionInfoFile)" Lines="$(Curr_FileVersion)" Overwrite="true" />
+  </Target>
   <PropertyGroup>
     <GenerateVersionDetailDependsOn>
-      GenerateVersionDetail
+      ReadPriorVersionFromFile;
+      GenerateVersionDetail;
+      WriteCurrVersionToFile
     </GenerateVersionDetailDependsOn>
   </PropertyGroup>
   <!--SDK形式でのファイルバージョン定義を用意する-->

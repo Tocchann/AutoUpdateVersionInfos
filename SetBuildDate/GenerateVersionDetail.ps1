@@ -3,7 +3,9 @@ param (
     [Parameter(Mandatory=$true)]
     [string]$TargetPath,
     [Parameter(Mandatory=$true)]
-    [string]$BaseVersionStr
+    [string]$BaseVersionStr,
+    [Parameter(Mandatory=$true)]
+    [string]$PriorVersionStr
 )
 
 begin {

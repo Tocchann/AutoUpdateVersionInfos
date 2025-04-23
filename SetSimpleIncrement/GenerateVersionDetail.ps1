@@ -3,7 +3,9 @@ param (
     [Parameter(Mandatory=$true)]
     [string]$TargetPath,
     [Parameter(Mandatory=$true)]
-    [string]$BaseVersionStr
+    [string]$BaseVersionStr,
+    [Parameter(Mandatory=$true)]
+    [string]$PriorVersionStr
 )
 
 begin {
@@ -13,7 +15,7 @@ begin {
         $currVer = [System.Version]::new($FileVersionInfo.FileMajorPart, $FileVersionInfo.FileMinorPart, $FileVersionInfo.FileBuildPart, $FileVersionInfo.FilePrivatePart)
     }
     else{
-        $currVer = [System.Version]::new(0,0,0,0)
+        $currVer = [System.Version]::new($PriorVersionStr)
     }
     $baseVer = [System.Version]::new($baseVer.Major, $baseVer.Minor, $baseVer.Build, $currVer.Revision)
 }
