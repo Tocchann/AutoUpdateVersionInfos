@@ -11,8 +11,7 @@ param (
 begin {
     $baseVer = [System.Version]::new($BaseVersionStr)
     if( Test-Path $TargetPath ){
-        $FileVersionInfo = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($TargetPath)
-        $currVer = [System.Version]::new($FileVersionInfo.FileMajorPart, $FileVersionInfo.FileMinorPart, $FileVersionInfo.FileBuildPart, $FileVersionInfo.FilePrivatePart)
+        $currVer = [System.Version]::new([System.Diagnostics.FileVersionInfo]::GetVersionInfo($TargetPath).FileVersion)
     }
     else{
         $currVer = [System.Version]::new($PriorVersionStr)

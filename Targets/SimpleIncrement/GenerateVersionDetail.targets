@@ -16,7 +16,7 @@
       <PreDefinedFileVersion Condition="'$(PreDefinedFileVersion)' == ''">$(Version)</PreDefinedFileVersion>
     </PropertyGroup>
 
-    <Exec Command="pwsh –NonInteractive -ExecutionPolicy Unrestricted -Command $(MSBuildThisFileDirectory)GenerateVersionDetail.ps1 $(TargetPath) $(PreDefinedFileVersion) $(Prior_FileVersion)" IgnoreExitCode="true" ConsoleToMsBuild="true">
+    <Exec Command="PowerShell –NonInteractive -ExecutionPolicy Unrestricted -Command $(MSBuildThisFileDirectory)GenerateVersionDetail.ps1 $(TargetPath) $(PreDefinedFileVersion) $(Prior_FileVersion)" IgnoreExitCode="true" ConsoleToMsBuild="true">
       <Output ItemName="_FileVersions" TaskParameter="ConsoleOutput" />
     </Exec>
     <Message Text="PreDefinedFileVersion: $(PreDefinedFileVersion)" Importance="low" />

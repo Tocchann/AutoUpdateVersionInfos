@@ -10,29 +10,34 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ソリューション項目
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SetOffsetDate", "SetOffsetDate", "{DDB4EF12-CC4E-5E88-E6FC-71A802F4DE97}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OffsetDate", "OffsetDate", "{DDB4EF12-CC4E-5E88-E6FC-71A802F4DE97}"
 	ProjectSection(SolutionItems) = preProject
-		SetOffsetDate\GenerateVersionDetail.ps1 = SetOffsetDate\GenerateVersionDetail.ps1
-		SetOffsetDate\GenerateVersionDetail.targets = SetOffsetDate\GenerateVersionDetail.targets
+		Targets\OffsetDate\GenerateVersionDetail.ps1 = Targets\OffsetDate\GenerateVersionDetail.ps1
+		Targets\OffsetDate\GenerateVersionDetail.targets = Targets\OffsetDate\GenerateVersionDetail.targets
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SetBuildDate", "SetBuildDate", "{2DA821DC-1007-4101-98CC-B269A365B2F4}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildDate", "BuildDate", "{2DA821DC-1007-4101-98CC-B269A365B2F4}"
 	ProjectSection(SolutionItems) = preProject
-		SetBuildDate\GenerateVersionDetail.ps1 = SetBuildDate\GenerateVersionDetail.ps1
-		SetBuildDate\GenerateVersionDetail.targets = SetBuildDate\GenerateVersionDetail.targets
+		Targets\BuildDate\GenerateVersionDetail.ps1 = Targets\BuildDate\GenerateVersionDetail.ps1
+		Targets\BuildDate\GenerateVersionDetail.targets = Targets\BuildDate\GenerateVersionDetail.targets
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DispThisVerNetCore", "DispThisVerNetCore\DispThisVerNetCore.csproj", "{01562A07-CCB3-4AB4-8C5F-B9692A4C90E6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SetSimpleIncrement", "SetSimpleIncrement", "{036116E5-2FF5-4D27-B12C-FED3A0657F88}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SimpleIncrement", "SimpleIncrement", "{036116E5-2FF5-4D27-B12C-FED3A0657F88}"
 	ProjectSection(SolutionItems) = preProject
-		SetSimpleIncrement\GenerateVersionDetail.ps1 = SetSimpleIncrement\GenerateVersionDetail.ps1
-		SetSimpleIncrement\GenerateVersionDetail.targets = SetSimpleIncrement\GenerateVersionDetail.targets
+		Targets\SimpleIncrement\GenerateVersionDetail.ps1 = Targets\SimpleIncrement\GenerateVersionDetail.ps1
+		Targets\SimpleIncrement\GenerateVersionDetail.targets = Targets\SimpleIncrement\GenerateVersionDetail.targets
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DispThisVerNetFx", "DispThisVerNetFx\DispThisVerNetFx.csproj", "{B81D327F-2719-4B58-9939-B8170C1C692F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DispThisVerMFC", "DispThisVerMFC\DispThisVerMFC.vcxproj", "{A87E2A93-DFD2-D113-7D7E-8F4E19526896}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Targets", "Targets", "{681E121A-B48D-4E97-8535-B749F214657F}"
+	ProjectSection(SolutionItems) = preProject
+		Targets\GenerateVersion.targets = Targets\GenerateVersion.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,9 +90,10 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{DDB4EF12-CC4E-5E88-E6FC-71A802F4DE97} = {2022CB0F-8BAF-F49E-0C48-8EF4C96EC109}
-		{2DA821DC-1007-4101-98CC-B269A365B2F4} = {2022CB0F-8BAF-F49E-0C48-8EF4C96EC109}
-		{036116E5-2FF5-4D27-B12C-FED3A0657F88} = {2022CB0F-8BAF-F49E-0C48-8EF4C96EC109}
+		{DDB4EF12-CC4E-5E88-E6FC-71A802F4DE97} = {681E121A-B48D-4E97-8535-B749F214657F}
+		{2DA821DC-1007-4101-98CC-B269A365B2F4} = {681E121A-B48D-4E97-8535-B749F214657F}
+		{036116E5-2FF5-4D27-B12C-FED3A0657F88} = {681E121A-B48D-4E97-8535-B749F214657F}
+		{681E121A-B48D-4E97-8535-B749F214657F} = {2022CB0F-8BAF-F49E-0C48-8EF4C96EC109}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5A155C0F-3072-41D0-BB16-1F7F7D70904C}
