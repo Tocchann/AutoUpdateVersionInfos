@@ -14,20 +14,24 @@
   </Target>
   <!--何よりも先んじて取り込む-->
   <Target Name="ReadPriorVersionFromFile" DependsOnTargets="MakePriorIntermediateVersionInfoFilePath">
+    <ItemGroup>
+      <IntermediateTargetPath Include="$(TargetPath)" />
+    </ItemGroup>
     <ReadLinesFromFile File="$(IntermediateVersionInfoFile)" Condition="Exists('$(IntermediateVersionInfoFile)')">
       <Output PropertyName="Prior_FileVersion" TaskParameter="Lines"/>
     </ReadLinesFromFile>
     <PropertyGroup>
       <Prior_FileVersion Condition="'$(Prior_FileVersion)' == ''">0.0.0.0</Prior_FileVersion>
-      <_AssemblyTimestampBeforeBuild>%(IntermediateAssembly.ModifiedTime)</_AssemblyTimestampBeforeBuild>
+      <_TargetPathTimestampBeforeBuild>%(IntermediateTargetPath.ModifiedTime)</_TargetPathTimestampBeforeBuild>
     </PropertyGroup>
   </Target>
   <!--ビルドが成功したら、PostBuildEvent の後処理として実行する-->
-  <Target Name="WriteCurrVersionToFile" DependsOnTargets="MakePriorIntermediateVersionInfoFilePath" BeforeTargets="PostBuildEvent" Condition="'$(_AssemblyTimestampBeforeCompile)' != '$(_AssemblyTimestampAfterCompile)'">
+  <Target Name="WriteCurrVersionToFile" DependsOnTargets="MakePriorIntermediateVersionInfoFilePath" BeforeTargets="PostBuildEvent">
     <PropertyGroup>
       <Curr_FileVersion>@(_FileVersions, '.')</Curr_FileVersion>
+      <_TargetPathTimestampAfterBuild>%(IntermediateTargetPath.ModifiedTime)</_TargetPathTimestampAfterBuild>
     </PropertyGroup>
-    <WriteLinesToFile File="$(IntermediateVersionInfoFile)" Lines="$(Curr_FileVersion)" Overwrite="true" />
+    <WriteLinesToFile File="$(IntermediateVersionInfoFile)" Lines="$(Curr_FileVersion)" Overwrite="true" Condition="'$(_TargetPathTimestampBeforeBuild)' != '$(_TargetPathTimestampAfterBuild)'" />
   </Target>
   <PropertyGroup>
     <GenerateVersionDetailDependsOn>
