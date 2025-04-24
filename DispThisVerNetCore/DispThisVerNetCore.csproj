@@ -10,6 +10,7 @@
     <NeedSdkFileVersion>true</NeedSdkFileVersion>
     <StartYear>2025</StartYear>
     <Version>1.0.0.0</Version>
+    <BaseOutputPath>..\bin\</BaseOutputPath>
   </PropertyGroup>
 
 </Project>
