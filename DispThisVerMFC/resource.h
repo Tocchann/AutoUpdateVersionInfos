@@ -4,7 +4,9 @@
 //
 #define IDD_DISPTHISVERMFC_DIALOG       102
 #define IDR_MAINFRAME                   128
-#define IDC_STC_VERSION                 1000
+#define IDC_STC_VERSION_MFC             1000
+#define IDC_STC_VERSION_NETCORE         1001
+#define IDC_STC_VERSION_NETFX           1002
 
 // Next default values for new objects
 // 

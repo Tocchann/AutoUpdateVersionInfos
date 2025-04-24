@@ -4,6 +4,7 @@
 #include "pch.h"
 #include "DispThisVerMFC.h"
 #include "DispThisVerMFCDlg.h"
+#include <atlpath.h>
 
 #pragma comment(lib, "VERSION.LIB" )
 
@@ -45,6 +46,8 @@ BOOL CDispThisVerMFCDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 小さいアイコンの設定
 
 	// TODO: 初期化をここに追加します。
+
+
 	TCHAR modulePath[MAX_PATH];
 	::GetModuleFileName( nullptr, modulePath, MAX_PATH );
 	auto verInfoSize = ::GetFileVersionInfoSize( modulePath, nullptr );
@@ -63,7 +66,55 @@ BOOL CDispThisVerMFCDlg::OnInitDialog()
 					LOWORD( pFileInfo->dwFileVersionMS ),
 					HIWORD( pFileInfo->dwFileVersionLS ),
 					LOWORD( pFileInfo->dwFileVersionLS ) );
-				SetDlgItemText( IDC_STC_VERSION, strVersion );
+				SetDlgItemText( IDC_STC_VERSION_MFC, strVersion );
+			}
+		}
+		delete[]verInfo;
+	}
+	*(ATLPath::FindFileName( modulePath )-1) = L'\0';
+	CString configName = ATLPath::FindFileName( modulePath );
+	CPath path;
+	path.Combine( modulePath, TEXT( "..\\..\\") + configName + _T("\\net9.0\\DispThisVerNetCore.exe" ) );
+	verInfoSize = ::GetFileVersionInfoSize( path, nullptr );
+	if( verInfoSize > 0 )
+	{
+		auto verInfo = new BYTE[verInfoSize];
+		if( ::GetFileVersionInfo( path, 0, verInfoSize, verInfo ) )
+		{
+			VS_FIXEDFILEINFO* pFileInfo = nullptr;
+			UINT fileInfoSize = 0;
+			if( ::VerQueryValue( verInfo, TEXT( "\\" ), (LPVOID*)&pFileInfo, &fileInfoSize ) )
+			{
+				CString strVersion;
+				strVersion.Format( TEXT( "%d.%d.%d.%d" ),
+					HIWORD( pFileInfo->dwFileVersionMS ),
+					LOWORD( pFileInfo->dwFileVersionMS ),
+					HIWORD( pFileInfo->dwFileVersionLS ),
+					LOWORD( pFileInfo->dwFileVersionLS ) );
+				SetDlgItemText( IDC_STC_VERSION_NETCORE, strVersion );
+			}
+		}
+		delete[]verInfo;
+	}
+
+	path.Combine( modulePath, TEXT( "..\\..\\AnyCPU\\" ) + configName + _T( "\\DispThisVerNetFx.exe" ) );
+	verInfoSize = ::GetFileVersionInfoSize( path, nullptr );
+	if( verInfoSize > 0 )
+	{
+		auto verInfo = new BYTE[verInfoSize];
+		if( ::GetFileVersionInfo( path, 0, verInfoSize, verInfo ) )
+		{
+			VS_FIXEDFILEINFO* pFileInfo = nullptr;
+			UINT fileInfoSize = 0;
+			if( ::VerQueryValue( verInfo, TEXT( "\\" ), (LPVOID*)&pFileInfo, &fileInfoSize ) )
+			{
+				CString strVersion;
+				strVersion.Format( TEXT( "%d.%d.%d.%d" ),
+					HIWORD( pFileInfo->dwFileVersionMS ),
+					LOWORD( pFileInfo->dwFileVersionMS ),
+					HIWORD( pFileInfo->dwFileVersionLS ),
+					LOWORD( pFileInfo->dwFileVersionLS ) );
+				SetDlgItemText( IDC_STC_VERSION_NETFX, strVersion );
 			}
 		}
 		delete[]verInfo;
